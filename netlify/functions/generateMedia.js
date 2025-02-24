@@ -60,7 +60,7 @@ exports.handler = async (event) => {
       const statusResponse = await fetch(`${apiUrl}/${generationId}`, {
         method: 'GET',
         headers: {
-          'Authorization': `Bearer ${process.env.LUMA_LABS_API_KEY},
+          'Authorization': 'Authorization': `Bearer luma-8903d2f1-a33a-42a7-af34-9d2288e4432b-2d31e03a-1e0f-4e4a-9908-6342b0766b72`,
           'Content-Type': 'application/json',
         },
       });
