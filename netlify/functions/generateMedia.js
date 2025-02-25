@@ -27,10 +27,9 @@ exports.handler = async (event) => {
     const payload = {
       prompt,
       aspect_ratio,
-      model: media_type === 'photo' ? 'ray-1-6' : 'ray-2', // Fix model value
+      model: media_type === 'photo' ? 'ray-1-6' : 'ray-2', // Ensures valid model selection
       ...(media_type === 'video' && { duration: '5s', resolution: '720p' }),
     };
-    
 
     console.log("🔹 Sending request to Luma Labs API:", JSON.stringify(payload, null, 2));
 
@@ -42,25 +41,20 @@ exports.handler = async (event) => {
       },
       body: JSON.stringify(payload),
     });
-    
-    const data = await response.json();
-    console.log("🔸 Luma Labs API Response:", JSON.stringify(data, null, 2));
-    
+
+    const responseData = await response.json();
+    console.log("🔸 Luma Labs API Response:", JSON.stringify(responseData, null, 2));
 
     if (!response.ok) {
-      const errorData = await response.json();
-      console.error("Luma Labs API Error:", errorData); // Add this log
+      console.error("Luma Labs API Error:", responseData);
       return {
         statusCode: response.status,
         headers: { 'Access-Control-Allow-Origin': '*' },
-        body: JSON.stringify({ error: 'Generation request failed', details: errorData }),
+        body: JSON.stringify({ error: 'Generation request failed', details: responseData }),
       };
     }
-    
-    
 
-    const data = await response.json();
-    const generationId = data.id;
+    const generationId = responseData.id;
 
     let generationStatus = 'pending';
     let generationResult = null;
@@ -77,6 +71,7 @@ exports.handler = async (event) => {
 
       if (!statusResponse.ok) {
         const errorData = await statusResponse.json();
+        console.error("🔻 Error Fetching Status:", errorData);
         return {
           statusCode: statusResponse.status,
           headers: { 'Access-Control-Allow-Origin': '*' },
@@ -96,13 +91,15 @@ exports.handler = async (event) => {
         body: JSON.stringify({ media_url: mediaUrl }),
       };
     } else {
+      console.error("🔻 Final API Error:", generationResult);
       return {
         statusCode: 500,
         headers: { 'Access-Control-Allow-Origin': '*' },
-        body: JSON.stringify({ error: 'Media generation failed', details: generationResult.failure_reason }),
+        body: JSON.stringify({ error: 'Media generation failed', details: generationResult.failure_reason || "Unknown error" }),
       };
     }
   } catch (error) {
+    console.error("🔻 Server Error:", error);
     return {
       statusCode: 500,
       headers: { 'Access-Control-Allow-Origin': '*' },
@@ -110,5 +107,3 @@ exports.handler = async (event) => {
     };
   }
 };
-
-
