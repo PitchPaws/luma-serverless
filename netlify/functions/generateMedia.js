@@ -1,3 +1,4 @@
+const { LUMA_LABS_API_KEY } = require('./config');
 const fetch = require('node-fetch');
 
 exports.handler = async (event) => {
@@ -34,7 +35,7 @@ exports.handler = async (event) => {
     const response = await fetch(apiUrl, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer luma-8903d2f1-a33a-42a7-af34-9d2288e4432b-2d31e03a-1e0f-4e4a-9908-6342b0766b72`, // Replace with your actual API key
+        'Authorization': `Bearer ${LUMA_LABS_API_KEY}`, // Replace with your actual API key
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(payload),
@@ -60,7 +61,7 @@ exports.handler = async (event) => {
       const statusResponse = await fetch(`${apiUrl}/${generationId}`, {
         method: 'GET',
         headers: {
-          'Authorization': 'Authorization': `Bearer luma-8903d2f1-a33a-42a7-af34-9d2288e4432b-2d31e03a-1e0f-4e4a-9908-6342b0766b72`,
+          'Authorization': `Bearer ${LUMA_LABS_API_KEY}`,
           'Content-Type': 'application/json',
         },
       });
