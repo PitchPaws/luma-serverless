@@ -43,12 +43,15 @@ exports.handler = async (event) => {
 
     if (!response.ok) {
       const errorData = await response.json();
+      console.error("Luma Labs API Error:", errorData); // Add this log
       return {
         statusCode: response.status,
         headers: { 'Access-Control-Allow-Origin': '*' },
         body: JSON.stringify({ error: 'Generation request failed', details: errorData }),
       };
     }
+    
+    
 
     const data = await response.json();
     const generationId = data.id;
