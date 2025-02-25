@@ -32,14 +32,20 @@ exports.handler = async (event) => {
     };
     
 
+    console.log("🔹 Sending request to Luma Labs API:", JSON.stringify(payload, null, 2));
+
     const response = await fetch(apiUrl, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${LUMA_LABS_API_KEY}`, // Replace with your actual API key
+        'Authorization': `Bearer ${LUMA_LABS_API_KEY}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(payload),
     });
+    
+    const data = await response.json();
+    console.log("🔸 Luma Labs API Response:", JSON.stringify(data, null, 2));
+    
 
     if (!response.ok) {
       const errorData = await response.json();
